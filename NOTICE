@@ -1,0 +1,20 @@
+Knot Skills vendors content from multiple upstream skill repositories.
+
+Office skills:
+  Source: https://github.com/MiniMax-AI/skills
+  Upstream skill paths:
+    skills/minimax-xlsx
+    skills/pptx-generator
+    skills/minimax-docx
+    skills/minimax-pdf
+  License: MIT, see upstream license files retained with vendored content where present.
+
+Web presentation skill:
+  Source: https://github.com/realraelrr/guizang-ppt-skill
+  License: MIT, see skills/web-ppt/LICENSE.
+
+Handoff skill:
+  Source: https://github.com/realraelrr/codex-handoff-skill
+
+Knot distribution names differ from upstream names to provide a stable default
+skill surface for Knot users.
