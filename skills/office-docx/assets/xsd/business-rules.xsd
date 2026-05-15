@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Business Rules Gate-Check Schema for minimax-docx -->
+<!-- Business Rules Gate-Check Schema for office-docx -->
 <!-- Used in Scenario C (template application) as hard gate -->
 <!-- Validates business compliance beyond XML correctness -->
-<!-- MIT License - minimax-docx project -->
+<!-- MIT License - office-docx project -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
            targetNamespace="http://schemas.openxmlformats.org/wordprocessingml/2006/main"

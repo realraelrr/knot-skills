@@ -4,11 +4,11 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Wordprocessing;
-using MiniMaxAIDocx.Core.OpenXml;
-using MiniMaxAIDocx.Core.Typography;
+using KnotSkillsDocx.Core.OpenXml;
+using KnotSkillsDocx.Core.Typography;
 using WpPageSize = DocumentFormat.OpenXml.Wordprocessing.PageSize;
 
-namespace MiniMaxAIDocx.Core.Samples;
+namespace KnotSkillsDocx.Core.Samples;
 
 /// <summary>
 /// Compilable reference examples for DOCX document creation and setup.
@@ -609,7 +609,7 @@ public static class DocumentCreationSamples
         // These map to Dublin Core metadata elements in docProps/core.xml
         doc.PackageProperties.Title = "Quarterly Report";
         doc.PackageProperties.Subject = "Financial Summary";
-        doc.PackageProperties.Creator = "MiniMax AI";          // Author
+        doc.PackageProperties.Creator = "Knot Skills";          // Author
         doc.PackageProperties.Keywords = "report, finance, Q4";
         doc.PackageProperties.Description = "Auto-generated financial report";
         doc.PackageProperties.Category = "Reports";
@@ -625,8 +625,8 @@ public static class DocumentCreationSamples
         var extendedProps = doc.AddExtendedFilePropertiesPart();
         extendedProps.Properties = new DocumentFormat.OpenXml.ExtendedProperties.Properties
         {
-            Company = new Company("MiniMax Inc."),
-            Application = new Application("MiniMaxAIDocx"),
+            Company = new Company("Knot"),
+            Application = new Application("KnotSkillsDocx"),
             ApplicationVersion = new ApplicationVersion("1.0.0")
         };
         extendedProps.Properties.Save();

@@ -1,4 +1,4 @@
-# minimax-docx Environment Setup & Initialization Script (Windows PowerShell)
+# office-docx Environment Setup & Initialization Script (Windows PowerShell)
 # Supports: Windows 10/11, Windows Server 2019+
 # License: MIT
 #Requires -Version 5.1
@@ -33,7 +33,7 @@ Usage: setup.ps1 [options]
 }
 
 Write-Host "============================================"
-Write-Host "  minimax-docx Setup & Initialization (Windows)"
+Write-Host "  office-docx Setup & Initialization (Windows)"
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "============================================"
 
@@ -194,7 +194,7 @@ if (-not $Minimal) {
 }
 
 # --- Build Project ---
-Step "Building minimax-docx .NET project"
+Step "Building office-docx .NET project"
 
 if (-not (Test-Path $DotnetDir)) {
     Fail "Dotnet project directory not found: $DotnetDir"
@@ -234,11 +234,11 @@ Pop-Location
 if (-not $SkipVerify) {
     Step "Verification Test"
 
-    $testOutput = Join-Path $env:TEMP "minimax-docx-setup-test-$PID.docx"
+    $testOutput = Join-Path $env:TEMP "office-docx-setup-test-$PID.docx"
 
     Info "Creating a test document..."
     Push-Location $DotnetDir
-    $testResult = & dotnet run --project MiniMaxAIDocx.Cli -- create --type report --output $testOutput --title "Setup Test" 2>&1
+    $testResult = & dotnet run --project KnotSkillsDocx.Cli -- create --type report --output $testOutput --title "Setup Test" 2>&1
     $testExitCode = $LASTEXITCODE
     Pop-Location
 
@@ -251,7 +251,7 @@ if (-not $SkipVerify) {
         }
 
         Remove-Item $testOutput -Force
-        Log "Test passed - minimax-docx is ready to use!"
+        Log "Test passed - office-docx is ready to use!"
     } else {
         Fail "Test document creation failed. Output:"
         $testResult | ForEach-Object { Fail "  $_" }
@@ -269,6 +269,6 @@ Write-Host "  pandoc:      $pandocInfo"
 Write-Host "  Project:     $DotnetDir"
 Write-Host ""
 Write-Host "  Usage:"
-Write-Host "    dotnet run --project $DotnetDir\MiniMaxAIDocx.Cli -- create --type report --output my_report.docx"
+Write-Host "    dotnet run --project $DotnetDir\KnotSkillsDocx.Cli -- create --type report --output my_report.docx"
 Write-Host ""
 Write-Host "  Log file: $LogFile"

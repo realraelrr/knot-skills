@@ -1,4 +1,6 @@
 Knot Skills vendors content from multiple upstream skill repositories.
+Knot-specific packaging files are MIT licensed under the top-level LICENSE.
+Vendored skill content retains the upstream licenses listed below.
 
 Office skills:
   Source: https://github.com/MiniMax-AI/skills
@@ -15,6 +17,7 @@ Web presentation skill:
 
 Handoff skill:
   Source: https://github.com/realraelrr/codex-handoff-skill
+  License: MIT, see skills/handoff/LICENSE.
 
 Knot distribution names differ from upstream names to provide a stable default
 skill surface for Knot users.

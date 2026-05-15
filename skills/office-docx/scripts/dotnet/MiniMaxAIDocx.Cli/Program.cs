@@ -1,7 +1,7 @@
 using System.CommandLine;
-using MiniMaxAIDocx.Core.Commands;
+using KnotSkillsDocx.Core.Commands;
 
-var rootCommand = new RootCommand("minimax-docx: OpenXML document generation and manipulation CLI");
+var rootCommand = new RootCommand("office-docx: OpenXML document generation and manipulation CLI");
 
 // Scenario commands
 rootCommand.Add(CreateCommand.Create());

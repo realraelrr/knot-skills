@@ -4,13 +4,13 @@
 
 ```bash
 # Validate against the WML subset schema
-dotnet run --project minimax-docx validate input.docx --xsd assets/xsd/wml-subset.xsd
+dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd
 
 # Validate against business rules (REQUIRED for Scenario C gate-check)
-dotnet run --project minimax-docx validate input.docx --xsd assets/xsd/business-rules.xsd
+dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/business-rules.xsd
 
 # Validate against both
-dotnet run --project minimax-docx validate input.docx --xsd assets/xsd/wml-subset.xsd --xsd assets/xsd/business-rules.xsd
+dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd --xsd assets/xsd/business-rules.xsd
 ```
 
 ---

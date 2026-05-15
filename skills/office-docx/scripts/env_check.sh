@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# minimax-docx Quick Environment Check
+# office-docx Quick Environment Check
 # Cross-platform: macOS, Linux, WSL, Git Bash
-# Run this BEFORE any minimax-docx operation. Use setup.sh for initial installation.
+# Run this BEFORE any office-docx operation. Use setup.sh for initial installation.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,7 +11,7 @@ DOTNET_DIR="$SCRIPT_DIR/dotnet"
 # Force English output for dotnet CLI
 export DOTNET_CLI_UI_LANGUAGE=en
 
-echo "=== minimax-docx Environment Check ==="
+echo "=== office-docx Environment Check ==="
 echo ""
 
 STATUS="READY"
@@ -61,8 +61,8 @@ fi
 
 # --- Critical: NuGet packages ---
 if [ -d "$DOTNET_DIR" ]; then
-    if [ -f "$DOTNET_DIR/MiniMaxAIDocx.Cli/bin/Debug/net10.0/MiniMaxAIDocx.Cli.dll" ] || \
-       [ -f "$DOTNET_DIR/MiniMaxAIDocx.Cli/bin/Debug/net8.0/MiniMaxAIDocx.Cli.dll" ]; then
+    if [ -f "$DOTNET_DIR/KnotSkillsDocx.Cli/bin/Debug/net10.0/KnotSkillsDocx.Cli.dll" ] || \
+       [ -f "$DOTNET_DIR/KnotSkillsDocx.Cli/bin/Debug/net8.0/KnotSkillsDocx.Cli.dll" ]; then
         printf "[OK]      %-14s built\n" "project"
     else
         # Try restore + build

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# minimax-docx Environment Setup & Initialization Script
+# office-docx Environment Setup & Initialization Script
 # Supports: macOS (Homebrew), Linux (apt/dnf/pacman), WSL
 # License: MIT
 set -euo pipefail
@@ -259,7 +259,7 @@ install_zip_tools() {
 
 # --- .NET Project Build ---
 build_project() {
-    step "Building minimax-docx .NET project"
+    step "Building office-docx .NET project"
 
     if [ ! -d "$DOTNET_DIR" ]; then
         fail "Dotnet project directory not found: $DOTNET_DIR"
@@ -407,10 +407,10 @@ check_fonts() {
 verify_installation() {
     step "Verification Test"
 
-    local test_output="/tmp/minimax-docx-setup-test-$$.docx"
+    local test_output="/tmp/office-docx-setup-test-$$.docx"
 
     info "Creating a test document..."
-    if cd "$DOTNET_DIR" && dotnet run --project MiniMaxAIDocx.Cli -- create \
+    if cd "$DOTNET_DIR" && dotnet run --project KnotSkillsDocx.Cli -- create \
         --type report --output "$test_output" --title "Setup Test" 2>>"$LOG_FILE"; then
         log "Test document created: $test_output"
 
@@ -425,7 +425,7 @@ verify_installation() {
 
         # Cleanup
         rm -f "$test_output"
-        log "Test passed — minimax-docx is ready to use!"
+        log "Test passed — office-docx is ready to use!"
     else
         fail "Test document creation failed. Check $LOG_FILE for details."
         return 1
@@ -446,7 +446,7 @@ print_summary() {
     echo "  Project:     $DOTNET_DIR"
     echo ""
     echo "  Usage:"
-    echo "    dotnet run --project $DOTNET_DIR/MiniMaxAIDocx.Cli -- create --type report --output my_report.docx"
+    echo "    dotnet run --project $DOTNET_DIR/KnotSkillsDocx.Cli -- create --type report --output my_report.docx"
     echo "    bash $SCRIPT_DIR/env_check.sh     # Quick environment check"
     echo ""
     echo "  Log file: $LOG_FILE"
@@ -455,7 +455,7 @@ print_summary() {
 # --- Main ---
 main() {
     echo "============================================"
-    echo "  minimax-docx Setup & Initialization"
+    echo "  office-docx Setup & Initialization"
     echo "  $(date '+%Y-%m-%d %H:%M:%S')"
     echo "============================================"
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Common type definitions for WordprocessingML subset schema -->
-<!-- MIT License - minimax-docx project -->
+<!-- MIT License - office-docx project -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
            xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
