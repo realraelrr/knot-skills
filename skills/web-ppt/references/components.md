@@ -85,7 +85,7 @@
 <!-- ... 页面主体 ... -->
 
 <div class="foot">
-  <div class="title">项目名 · CodePilot　|　github.com/codepilot</div>
+  <div class="title">项目名 · Product　|　example.com</div>
   <div>Act I · Dev Numbers</div>
 </div>
 ```
@@ -220,8 +220,8 @@
 
 **Kicker** 是标题上方的小提示文字（等宽、全大写、小字号）：
 ```html
-<div class="kicker">过去 64 天 · 开发篇</div>
-<div class="h1-zh">一个人，做了什么。</div>
+<div class="kicker">关键周期 · 数据篇</div>
+<div class="h1-zh">我们完成了什么。</div>
 ```
 
 **Tag** 是独立的标签胶囊（带边框）：

@@ -1,17 +1,11 @@
 ---
 name: office-pdf
 description: >
-  Use this skill when visual quality and design identity matter for a PDF.
-  CREATE (generate from scratch): "make a PDF", "generate a report", "write a proposal",
-  "create a resume", "beautiful PDF", "professional document", "cover page",
-  "polished PDF", "client-ready document".
-  FILL (complete form fields): "fill in the form", "fill out this PDF",
-  "complete the form fields", "write values into PDF", "what fields does this PDF have".
-  REFORMAT (apply design to an existing doc): "reformat this document", "apply our style",
-  "convert this Markdown/text to PDF", "make this doc look good", "re-style this PDF".
-  This skill uses a token-based design system: color, typography, and spacing are derived
-  from the document type and flow through every page. The output is print-ready.
-  Prefer this skill when appearance matters, not just when any PDF output is needed.
+  Create polished PDF deliverables, fill PDF forms, inspect fillable PDF
+  fields, or reformat existing text/Markdown/PDF content into a designed PDF.
+  Use when final output is PDF and visual quality, form fields, cover pages, or
+  print-ready layout matter. Do not use for knowledge extraction or casual PDF
+  reading; use docling-skill or lightweight pdf tooling for those.
 license: MIT
 metadata:
   version: "1.0"
@@ -179,7 +173,7 @@ bash scripts/make.sh reformat \
 
 ```bash
 bash scripts/make.sh check   # verify all deps
-bash scripts/make.sh fix     # auto-install missing deps
+bash scripts/make.sh fix     # print manual install commands; does not install
 bash scripts/make.sh demo    # build a sample PDF
 ```
 

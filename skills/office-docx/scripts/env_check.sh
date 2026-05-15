@@ -1,12 +1,25 @@
 #!/usr/bin/env bash
 # office-docx Quick Environment Check
 # Cross-platform: macOS, Linux, WSL, Git Bash
-# Run this BEFORE any office-docx operation. Use setup.sh for initial installation.
+# Run this BEFORE any office-docx operation. Use setup.sh --install-deps only after approving environment changes.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DOTNET_DIR="$SCRIPT_DIR/dotnet"
+CLI_PROJECT="$DOTNET_DIR/OfficeDocx.Cli/OfficeDocx.Cli.csproj"
+CORE_PROJECT="$DOTNET_DIR/OfficeDocx.Core/OfficeDocx.Core.csproj"
+VERIFY_BUILD=false
+
+for arg in "$@"; do
+    case "$arg" in
+        --build) VERIFY_BUILD=true ;;
+        --help|-h)
+            echo "Usage: env_check.sh [--build]"
+            echo "  --build  Run dotnet restore/build to verify compilation; this may write bin/obj and NuGet cache files."
+            exit 0
+            ;;
+    esac
+done
 
 # Force English output for dotnet CLI
 export DOTNET_CLI_UI_LANGUAGE=en
@@ -45,7 +58,7 @@ if ! command -v dotnet &>/dev/null; then
         *) echo "    https://dotnet.microsoft.com/download" ;;
     esac
     echo ""
-    echo "  Or run the full setup: bash scripts/setup.sh"
+    echo "  Or run explicit setup after approval: bash scripts/setup.sh --install-deps"
     echo ""
     STATUS="NOT READY"
 else
@@ -59,19 +72,22 @@ else
     fi
 fi
 
-# --- Critical: NuGet packages ---
+# --- Critical: project files ---
 if [ -d "$DOTNET_DIR" ]; then
-    if [ -f "$DOTNET_DIR/KnotSkillsDocx.Cli/bin/Debug/net10.0/KnotSkillsDocx.Cli.dll" ] || \
-       [ -f "$DOTNET_DIR/KnotSkillsDocx.Cli/bin/Debug/net8.0/KnotSkillsDocx.Cli.dll" ]; then
-        printf "[OK]      %-14s built\n" "project"
+    if [ -f "$CLI_PROJECT" ] && [ -f "$CORE_PROJECT" ]; then
+        printf "[OK]      %-14s project files present\n" "project"
     else
-        # Try restore + build
-        if dotnet restore "$DOTNET_DIR" --verbosity quiet &>/dev/null; then
+        printf "[FAIL]    %-14s expected OfficeDocx.Cli/Core projects under %s\n" "project" "$DOTNET_DIR"
+        STATUS="NOT READY"
+    fi
+
+    if $VERIFY_BUILD; then
+        if dotnet restore "$CLI_PROJECT" --verbosity quiet &>/dev/null; then
             printf "[OK]      %-14s packages restored\n" "nuget"
-            if dotnet build "$DOTNET_DIR" --verbosity quiet --no-restore &>/dev/null; then
+            if dotnet build "$CLI_PROJECT" --verbosity quiet --no-restore &>/dev/null; then
                 printf "[OK]      %-14s build succeeded\n" "project"
             else
-                printf "[FAIL]    %-14s build failed (run: dotnet build %s)\n" "project" "$DOTNET_DIR"
+                printf "[FAIL]    %-14s build failed (run: dotnet build %s)\n" "project" "$CLI_PROJECT"
                 STATUS="NOT READY"
             fi
         else
@@ -84,6 +100,9 @@ if [ -d "$DOTNET_DIR" ]; then
             echo ""
             STATUS="NOT READY"
         fi
+    else
+        printf "[WARN]    %-14s skipped; use env_check.sh --build to verify compilation\n" "build"
+        WARNINGS=$((WARNINGS + 1))
     fi
 else
     printf "[FAIL]    %-14s directory not found: %s\n" "project" "$DOTNET_DIR"
@@ -190,7 +209,7 @@ else
     echo "Status: NOT READY"
     echo ""
     echo "Critical dependencies missing. Run the full setup:"
-    echo "  bash scripts/setup.sh          # macOS / Linux / WSL"
-    echo "  powershell scripts/setup.ps1   # Windows PowerShell"
+    echo "  bash scripts/setup.sh --install-deps          # macOS / Linux / WSL"
+    echo "  powershell scripts/setup.ps1 -InstallDeps     # Windows PowerShell"
     exit 1
 fi

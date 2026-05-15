@@ -10,6 +10,7 @@ export DOTNET_CLI_UI_LANGUAGE=en
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DOTNET_DIR="$SCRIPT_DIR/dotnet"
+CLI_PROJECT="$DOTNET_DIR/OfficeDocx.Cli/OfficeDocx.Cli.csproj"
 LOG_FILE="$PROJECT_DIR/.setup.log"
 
 # --- Colors ---
@@ -173,7 +174,7 @@ install_pandoc() {
         zypper) sudo zypper install -y pandoc ;;
         apk)    apk add --no-cache pandoc ;;
         *)
-            warn "Cannot auto-install pandoc. Install manually: https://pandoc.org/installing.html"
+            warn "Cannot install pandoc automatically. Install manually: https://pandoc.org/installing.html"
             return 0
             ;;
     esac
@@ -221,7 +222,7 @@ install_soffice() {
         zypper) sudo zypper install -y libreoffice ;;
         apk)    apk add --no-cache libreoffice ;;
         *)
-            warn "Cannot auto-install LibreOffice. Install manually: https://www.libreoffice.org/download/"
+            warn "Cannot install LibreOffice automatically. Install manually: https://www.libreoffice.org/download/"
             return 0
             ;;
     esac
@@ -266,25 +267,23 @@ build_project() {
         return 1
     fi
 
-    cd "$DOTNET_DIR"
-
     info "Restoring NuGet packages..."
-    if ! dotnet restore --verbosity quiet 2>>"$LOG_FILE"; then
+    if ! dotnet restore "$CLI_PROJECT" --verbosity quiet 2>>"$LOG_FILE"; then
         fail "NuGet restore failed. Check network and $LOG_FILE for details."
         fail "Common causes:"
         fail "  - No internet access (NuGet needs to download packages)"
         fail "  - Corporate proxy blocking nuget.org"
         fail "  - Disk space insufficient"
         echo ""
-        fail "Try manually: cd $DOTNET_DIR && dotnet restore --verbosity detailed"
+        fail "Try manually: dotnet restore $CLI_PROJECT --verbosity detailed"
         return 1
     fi
     log "NuGet packages restored"
 
     info "Building project..."
-    if ! dotnet build --verbosity quiet --no-restore 2>>"$LOG_FILE"; then
+    if ! dotnet build "$CLI_PROJECT" --verbosity quiet --no-restore 2>>"$LOG_FILE"; then
         fail "Build failed. Check $LOG_FILE for details."
-        fail "Try manually: cd $DOTNET_DIR && dotnet build --verbosity normal"
+        fail "Try manually: dotnet build $CLI_PROJECT --verbosity normal"
         return 1
     fi
     log "Project built successfully"
@@ -410,7 +409,7 @@ verify_installation() {
     local test_output="/tmp/office-docx-setup-test-$$.docx"
 
     info "Creating a test document..."
-    if cd "$DOTNET_DIR" && dotnet run --project KnotSkillsDocx.Cli -- create \
+    if cd "$DOTNET_DIR" && dotnet run --project OfficeDocx.Cli -- create \
         --type report --output "$test_output" --title "Setup Test" 2>>"$LOG_FILE"; then
         log "Test document created: $test_output"
 
@@ -446,7 +445,7 @@ print_summary() {
     echo "  Project:     $DOTNET_DIR"
     echo ""
     echo "  Usage:"
-    echo "    dotnet run --project $DOTNET_DIR/KnotSkillsDocx.Cli -- create --type report --output my_report.docx"
+    echo "    dotnet run --project $DOTNET_DIR/OfficeDocx.Cli -- create --type report --output my_report.docx"
     echo "    bash $SCRIPT_DIR/env_check.sh     # Quick environment check"
     echo ""
     echo "  Log file: $LOG_FILE"
@@ -459,19 +458,20 @@ main() {
     echo "  $(date '+%Y-%m-%d %H:%M:%S')"
     echo "============================================"
 
-    : > "$LOG_FILE"  # Clear log
-
     detect_platform
 
     # Parse arguments
+    local INSTALL_DEPS=false
     local SKIP_OPTIONAL=false
     local SKIP_VERIFY=false
     for arg in "$@"; do
         case "$arg" in
+            --install-deps)  INSTALL_DEPS=true ;;
             --minimal)      SKIP_OPTIONAL=true ;;
             --skip-verify)  SKIP_VERIFY=true ;;
             --help|-h)
                 echo "Usage: setup.sh [options]"
+                echo "  --install-deps  Install missing system/user dependencies"
                 echo "  --minimal       Only install critical dependencies (skip pandoc, soffice, fonts)"
                 echo "  --skip-verify   Skip the verification test at the end"
                 echo "  --help          Show this help"
@@ -479,6 +479,15 @@ main() {
                 ;;
         esac
     done
+
+    if ! $INSTALL_DEPS; then
+        warn "Check-only mode. This script will not install packages or modify user config."
+        warn "Run with --install-deps only after approving environment changes."
+        "$SCRIPT_DIR/env_check.sh"
+        exit $?
+    fi
+
+    : > "$LOG_FILE"  # Clear log only for explicit setup runs.
 
     install_dotnet
     install_zip_tools

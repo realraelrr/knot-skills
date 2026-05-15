@@ -91,8 +91,10 @@ See the Complex Elements Guide section below.
 ### 8. Run Validation Pipeline
 
 ```
-dotnet run ... validate --xsd wml-subset.xsd
-dotnet run ... validate --xsd business-rules.xsd   # if applying a template
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  validate --input output.docx --xsd assets/xsd/wml-subset.xsd
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  validate --input output.docx --business
 ```
 
 ---
@@ -142,53 +144,31 @@ dotnet run ... validate --xsd business-rules.xsd   # if applying a template
 
 ---
 
-## Content Configuration JSON Format
+## CLI Content JSON Format
 
-The CLI `create` command accepts a JSON config:
+The CLI `create --content-json` command accepts a root array. Each item must use
+one of the currently implemented types: `heading`, `paragraph`, or lowercase
+`pagebreak`.
 
 ```json
-{
-  "type": "report",
-  "title": "Quarterly Revenue Analysis",
-  "subtitle": "Q1 2026",
-  "author": "Finance Team",
-  "pageSize": "A4",
-  "margins": { "top": 1440, "right": 1440, "bottom": 1440, "left": 1440 },
-  "sections": [
-    {
-      "heading": "Executive Summary",
-      "level": 1,
-      "content": [
-        { "type": "paragraph", "text": "Revenue grew 12% year-over-year..." },
-        {
-          "type": "table",
-          "headers": ["Region", "Revenue", "Growth"],
-          "rows": [
-            ["North America", "$4.2M", "+15%"],
-            ["Europe", "$2.8M", "+8%"],
-            ["Asia Pacific", "$1.9M", "+18%"]
-          ]
-        },
-        { "type": "image", "path": "charts/revenue.png", "width": "5in", "alt": "Revenue chart" }
-      ]
-    },
-    {
-      "heading": "Detailed Analysis",
-      "level": 1,
-      "content": [
-        { "type": "paragraph", "text": "Breaking down by product line..." }
-      ]
-    }
-  ]
-}
+[
+  { "type": "heading", "text": "Executive Summary", "level": 1 },
+  { "type": "paragraph", "text": "Revenue grew 12% year-over-year." },
+  { "type": "heading", "text": "Detailed Analysis", "level": 1 },
+  { "type": "paragraph", "text": "Breaking down by product line..." },
+  { "type": "pagebreak" },
+  { "type": "heading", "text": "Appendix", "level": 1 }
+]
 ```
 
 Supported content types:
-- `paragraph` — body text (applies Normal style)
-- `table` — headers + rows (applies TableGrid style)
-- `image` — inline image with width/height control
-- `list` — bulleted or numbered list items
-- `pageBreak` — forces a page break
+- `heading` — heading text with `level` 1-6
+- `paragraph` — body text
+- `pagebreak` — forces a page break
+
+For tables, images, lists, nested sections, or other complex content, use the
+Direct C# path and the bundled `Samples/*.cs` patterns instead of
+`--content-json`.
 
 ---
 

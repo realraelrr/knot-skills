@@ -57,18 +57,13 @@ function loadPlaywright() {
   try {
     browser = await chromium.launch();
   } catch (e) {
-    // Chromium binary missing — try installing
-    const { spawnSync } = require("child_process");
-    const r = spawnSync("npx", ["playwright", "install", "chromium"], { stdio: "inherit", shell: true });
-    if (r.status !== 0) {
-      console.error(JSON.stringify({
-        status: "error",
-        error: "Chromium not installed and auto-install failed",
-        hint: "Run: npx playwright install chromium"
-      }));
-      process.exit(2);
-    }
-    browser = await chromium.launch();
+    console.error(JSON.stringify({
+      status: "error",
+      error: "Chromium could not be launched",
+      detail: String(e),
+      hint: "Run: npx playwright install chromium"
+    }));
+    process.exit(2);
   }
 
   try {

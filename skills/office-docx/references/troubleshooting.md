@@ -26,10 +26,10 @@ Common mismatches:
 Check with:
 ```bash
 # List all pStyle values used in the document
-$CLI analyze --input output.docx | grep -i "pStyle"
+unzip -p output.docx word/document.xml | grep -o 'w:pStyle[^>]*w:val="[^"]*"' | sort -u
 
 # List all styleIds defined in styles.xml
-$CLI analyze --input template.docx --part styles | grep "styleId"
+unzip -p template.docx word/styles.xml | grep "styleId"
 ```
 
 **Fix:** Build a styleId mapping table before applying the template. Update every `pStyle` value in the document content.
@@ -90,10 +90,10 @@ $CLI fix-order --input doc.docx
 
 If auto-fix doesn't resolve it, unpack and inspect manually:
 ```bash
-$CLI unpack --input doc.docx --output unpacked/
+mkdir -p unpacked && unzip -q doc.docx -d unpacked/
 # Check word/document.xml for ordering issues
 # Fix, then repack:
-$CLI pack --input unpacked/ --output fixed.docx
+(cd unpacked && zip -qr ../fixed.docx .)
 ```
 
 **Prevention:** Read `references/openxml_element_order.md` before writing any XML manipulation code. Always append properties elements first, then content elements.
@@ -107,9 +107,9 @@ $CLI pack --input unpacked/ --output fixed.docx
 **Diagnosis:** Source document's `rPr` contains inline `rFonts` declarations that override template styles. Direct formatting always wins over style-based formatting in OpenXML.
 
 ```bash
-# Check for font contamination
-$CLI analyze --input output.docx | grep -i "font"
-# Look for rFonts in the content — if present, they're overriding styles
+# Look for direct font declarations in document content.
+# If rFonts is present in word/document.xml, it can override template styles.
+unzip -p output.docx word/document.xml | grep -o 'w:rFonts[^>]*' | head -40
 ```
 
 **Fix:** Strip `rFonts` from `rPr` when copying content, but KEEP `w:eastAsia` for CJK text:
@@ -150,8 +150,8 @@ Also strip these common direct formatting overrides:
 
 ```bash
 # Verify table count
-$CLI analyze --input source.docx | grep -i "table"
-$CLI analyze --input output.docx | grep -i "table"
+$CLI analyze --input source.docx
+$CLI analyze --input output.docx
 ```
 
 **Fix:** Use `list(body)` or `body.ChildElements` to get ALL top-level children including tables:
@@ -185,10 +185,10 @@ elements = list(body)  # all direct children
 
 ```bash
 # Check relationships
-$CLI analyze --input output.docx --part rels | grep -i "image"
+unzip -p output.docx word/_rels/document.xml.rels | grep -i "image"
 
 # Check if media files exist
-$CLI unpack --input output.docx --output unpacked/
+mkdir -p unpacked && unzip -q output.docx -d unpacked/
 ls unpacked/word/media/
 ```
 
@@ -230,7 +230,7 @@ foreach (var drawing in body.Descendants<Drawing>())
 
 ```bash
 # Check if TOC SDT exists
-$CLI analyze --input output.docx | grep -i "sdt\|toc"
+unzip -p output.docx word/document.xml | grep -E 'w:sdt|TOC|w:instrText' | head -40
 ```
 
 **Fix:**
@@ -282,7 +282,7 @@ body.InsertBefore(breakPara, heading1Paragraph);
 
 ```bash
 # Check hyperlink relationships
-$CLI analyze --input output.docx --part rels | grep -i "hyperlink"
+unzip -p output.docx word/_rels/document.xml.rels | grep -i "hyperlink"
 ```
 
 **Fix:** Merge source document's hyperlink relationships into output's rels file. Update rId references.
@@ -316,7 +316,7 @@ foreach (var hyperlink in body.Descendants<Hyperlink>())
 
 ```bash
 # Check numbering definitions
-$CLI analyze --input output.docx --part numbering
+unzip -p output.docx word/numbering.xml
 ```
 
 **Fix:** Map source numIds to template numIds, or merge numbering definitions:
@@ -348,8 +348,8 @@ int maxNumId = targetNumbering.Elements<NumberingInstance>()
 
 ```bash
 # Compare section properties
-$CLI analyze --input template.docx | grep -i "sectPr\|margin\|pgSz"
-$CLI analyze --input output.docx | grep -i "sectPr\|margin\|pgSz"
+unzip -p template.docx word/document.xml | grep -Eo 'w:sectPr|w:pgSz[^>]*/>|w:pgMar[^>]*/>' | tail -20
+unzip -p output.docx word/document.xml | grep -Eo 'w:sectPr|w:pgSz[^>]*/>|w:pgMar[^>]*/>' | tail -20
 ```
 
 **Fix:** Use the template's final `sectPr`. For intermediate `sectPr` elements (multi-section documents), merge carefully.
@@ -432,7 +432,7 @@ $CLI analyze --input template.docx
 4. Keep everything else from the template (cover, declaration, abstract, TOC, sectPr)
 
 ```bash
-$CLI apply-template --input source.docx --template template.docx --output out.docx --strategy base-replace
+$CLI apply-template --input source.docx --template template.docx --output out.docx
 ```
 
 **Prevention:** Analyze template structure FIRST. If template has structural content (cover, TOC, declaration sections), always use C-2 (Base-Replace). Read `references/scenario_c_apply_template.md` for detailed decision criteria.
@@ -447,7 +447,8 @@ $CLI apply-template --input source.docx --template template.docx --output out.do
 
 ```bash
 # Check for revision marks
-$CLI analyze --input output.docx | grep -i "revision\|ins\|del\|track"
+unzip -p output.docx word/document.xml | grep -E 'w:ins|w:del' | head -40
+unzip -p output.docx word/settings.xml | grep -E 'w:trackRevisions' | head -5
 ```
 
 **Fix:** Accept all revisions by flattening `w:ins` and `w:del` elements:
@@ -498,7 +499,7 @@ When a document has multiple problems, fix them in this priority order:
 
 ```bash
 # Full recovery pipeline
-$CLI unpack --input broken.docx --output unpacked/
+mkdir -p unpacked && unzip -q broken.docx -d unpacked/
 $CLI validate --input broken.docx --xsd assets/xsd/wml-subset.xsd  # find all errors
 $CLI fix-order --input broken.docx                                   # fix element ordering
 $CLI validate --input broken.docx --business                         # check business rules

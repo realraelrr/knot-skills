@@ -1,6 +1,6 @@
 ---
 name: office-pptx
-description: "Generate, edit, and read PowerPoint presentations. Create from scratch with PptxGenJS (cover, TOC, content, section divider, summary slides), edit existing PPTX via XML workflows, or extract text with markitdown. Triggers: PPT, PPTX, PowerPoint, presentation, slide, deck, slides."
+description: "Read, create, edit, or validate native PowerPoint .pptx presentations. Use when the user provides a PPTX file, asks for PowerPoint output, or needs template/XML-level PPTX editing. Use web-ppt instead for single-file HTML slide decks or magazine-style web presentations."
 license: MIT
 metadata:
   version: "1.0"

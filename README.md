@@ -17,7 +17,12 @@ Install into Codex:
 bash scripts/install-codex-skills.sh
 ```
 
-The install script links `skills/*` into `$CODEX_HOME/skills` or
-`~/.codex/skills`. It does not copy editable skill sources into Codex.
+The install script links the curated allowlist into `$CODEX_HOME/skills` or
+`~/.codex/skills`: `office-xlsx`, `office-pptx`, `office-docx`,
+`office-pdf`, `web-ppt`, and `handoff`.
+
+Existing symlinks with those names are replaced. Existing non-symlink
+directories are moved aside with a timestamped `.backup.*` suffix before the
+new links are created. Editable sources stay in this repository.
 
 Upstream source and sync notes are tracked in `UPSTREAMS.md`.

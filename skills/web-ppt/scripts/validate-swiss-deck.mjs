@@ -2,10 +2,9 @@
 import { readFileSync } from 'node:fs';
 
 const file = process.argv[2];
-const allowExperimental = process.argv.includes('--allow-experimental');
 
 if (!file) {
-  console.error('Usage: node scripts/validate-swiss-deck.mjs <index.html> [--allow-experimental]');
+  console.error('Usage: node scripts/validate-swiss-deck.mjs <index.html>');
   process.exit(2);
 }
 
@@ -33,11 +32,7 @@ slides.forEach((slide) => {
   if (!layout) {
     errors.push(`Slide ${slide.idx}: missing data-layout. Swiss locked mode requires S01-S22 or SWISS-COVER-ASCII/SWISS-CLOSING-ASCII.`);
   } else if (!allowedLayouts.has(layout)) {
-    errors.push(`Slide ${slide.idx}: data-layout="${layout}" is not registered in swiss-layout-lock.md.`);
-  }
-
-  if (!allowExperimental && /\bdata-layout="P2[34]\b|Swiss Image Split|Swiss Evidence Grid|swiss-img-split|swiss-img-grid/.test(slide.html)) {
-    errors.push(`Slide ${slide.idx}: uses experimental P23/P24 image structure. Use S22 or S15/S16 image-grid adaptations instead.`);
+    errors.push(`Slide ${slide.idx}: data-layout="${layout}" is not registered in swiss-layout-lock.md. Use S22 for one image, S15/S16 for image grids, or S08 + Swiss Map Component for maps.`);
   }
 
   const isStatement = layout === 'S03' || layout === 'S09' || layout === 'S10' || layout === 'SWISS-COVER-ASCII' || layout === 'SWISS-CLOSING-ASCII';

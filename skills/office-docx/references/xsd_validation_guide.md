@@ -4,13 +4,14 @@
 
 ```bash
 # Validate against the WML subset schema
-dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd
 
 # Validate against business rules (REQUIRED for Scenario C gate-check)
-dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/business-rules.xsd
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- validate --input input.docx --business
 
 # Validate against both
-dotnet run --project scripts/dotnet/KnotSkillsDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd --xsd assets/xsd/business-rules.xsd
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- validate --input input.docx --xsd assets/xsd/wml-subset.xsd
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- validate --input input.docx --business
 ```
 
 ---
@@ -87,9 +88,9 @@ Location: /word/document.xml, line 200
 
 ---
 
-## Business Rules XSD
+## Business Rules Validation
 
-The `business-rules.xsd` schema enforces project-specific constraints beyond standard OpenXML validity:
+The `--business` validator enforces project-specific constraints beyond standard OpenXML validity:
 
 | Rule | What It Checks |
 |------|---------------|
@@ -102,30 +103,18 @@ The `business-rules.xsd` schema enforces project-specific constraints beyond sta
 
 ### Extending Business Rules
 
-To add project-specific rules, add `xs:assert` or `xs:restriction` elements:
-
-```xml
-<!-- Require minimum 1-inch margins -->
-<xs:element name="pgMar">
-  <xs:complexType>
-    <xs:attribute name="top" type="xs:integer">
-      <xs:restriction>
-        <xs:minInclusive value="1440" />
-      </xs:restriction>
-    </xs:attribute>
-  </xs:complexType>
-</xs:element>
-```
+To add project-specific rules, update `BusinessRuleValidator.cs` and re-run
+`$CLI validate --input output.docx --business`.
 
 ---
 
 ## Gate-Check: Scenario C Hard Gate
 
-In Scenario C (Apply Template), the output document **MUST** pass `business-rules.xsd` validation before delivery:
+In Scenario C (Apply Template), the output document **MUST** pass business-rules validation before delivery:
 
 ```
 1. Apply template  →  output.docx
-2. Validate        →  dotnet run ... validate output.docx --xsd business-rules.xsd
+2. Validate        →  $CLI validate --input output.docx --business
 3. PASS?           →  Deliver to user
 4. FAIL?           →  Fix issues, re-validate, repeat until PASS
 ```

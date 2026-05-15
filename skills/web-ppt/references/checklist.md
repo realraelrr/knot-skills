@@ -1,6 +1,6 @@
 # 质量检查清单（Checklist）
 
-这个清单来自"一人公司"分享 PPT 的真实迭代过程。每一条都是踩过坑之后总结的，按重要性排序。
+这个清单来自实际 deck 迭代中的常见问题，按重要性排序。
 
 生成 PPT 前，先通读一遍；生成后，逐项自检。
 
@@ -12,7 +12,7 @@
 
 **现象**:颜色、字体看起来像 Swiss,但标题跑到中间、图片不在网格上、页面结构和原始 22P 完全不是一套东西。
 
-**根因**:生成时把 Swiss 当成风格包,自由组合了新的 P23/P24/自绘 SVG 页面,没有从原始参考 PPT 的 22 个登记版式里选。
+**根因**:生成时把 Swiss 当成风格包,自由组合了未登记图文结构或自绘 SVG 页面,没有从原始参考 PPT 的 22 个登记版式里选。
 
 **做法**:
 - 先读 `references/swiss-layout-lock.md`
@@ -26,7 +26,7 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 
 **校验会拦截**:
 - 未登记版式 / 缺少 `data-layout`
-- P23/P24 实验结构
+- 未登记图文结构
 - SVG 里写可见文字
 - S22 图片未绑定 `s22-hero-21x9`
 - S22 照片使用 `object-position:top center`
@@ -170,7 +170,7 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 **做法**:
 - 主内容最低边缘与分页组件之间至少留 `3vh` 呼吸空间
 - 需要贴底时,给主体容器加模板内置的 `.nav-safe-bottom` 或 `.nav-safe-bottom-tight`
-- 不要为了底部对齐启用 P23/P24 实验结构;正式 Swiss deck 优先用 S15/S16/S22 图片槽位
+- 不要为了底部对齐启用未登记结构;正式 Swiss deck 优先用 S15/S16/S22 图片槽位
 - 不要手写 `bottom:2vh` / `bottom:0` 放说明文字;这会和 nav 抢位置
 
 **自检**:
@@ -183,29 +183,29 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 
 **现象**:生成页看起来像瑞士风,但和原始参考 PPT 的实际字重、间距、时间线、卡片密度不一致;越迭代越偏离参考。
 
-**根因**:把新增图片版式或实验结构写成了全局样式修改,或无意改动了原始基座类,例如 `.h-hero` / `.h-xl` 字重、`.tl-node` 列宽、`.duo-compare` 间距。
+**根因**:把新增图片结构写成了全局样式修改,或无意改动了原始基座类,例如 `.h-hero` / `.h-xl` 字重、`.tl-node` 列宽、`.duo-compare` 间距。
 
 **做法**:
-- 原始参考文件 `the bundled Swiss reference template` 是 Swiss 主题的 golden source,但要以**实际页面用法**为准,不要只看未使用的 CSS helper
+- `assets/template-swiss.html` 是 Swiss 主题的 bundled golden source,但要以**实际页面用法**为准,不要只看未使用的 CSS helper
 - 原始页面的大标题大量使用 `font-weight:200`,强调词/数字用 `300`;`.h-hero` / `.h-xl` / `.h-hero-zh` / `.h-xl-zh` 在本模板里必须保持轻字重,不要恢复成 800/900
 - 除新增封面/封底 ASCII 机制、S22 图片槽位修复、横向时间线 label 居中修复、以及把标题 helper 校正为实际轻字重外,不要改动原始基座 CSS/JS recipe
 - 新增图片能力必须绑定到 S22/S15/S16 原始槽位,不要发明新正文结构
 - 如果要修改 `assets/template-swiss.html`,先做原始参考对比;可接受差异只应是 ASCII 类、S22 图片定位类、轻字重标题 helper 和已知动效修复
 
 **自检命令**:
-- 运行本次测试目录里的 `compare-swiss-base.mjs`,确认输出里 `missing in template: 0`
-- 目视对比原始 PPT 的同类页面:大标题字重、chrome-min 位置、timeline dot/label、卡片密度必须一致
+- 运行 `node scripts/validate-swiss-deck.mjs path/to/index.html`,确认登记版式、图片槽位、SVG 文本和标题轴线检查通过
+- 目视对比 `assets/template-swiss.html` 的同类页面:大标题字重、chrome-min 位置、timeline dot/label、卡片密度必须一致
 
 ### 0-F. 视觉 + 代码双核对:不要只看 HTML
 
 **现象**:代码看起来类名正确,但实际页面拥挤、图文关系不对、可选组件堆太多,或者用了不适合内容的版式。
 
 **做法**:
-- 同时打开原始参考 PPT、当前模板或生成页、测试 PPT,先做视觉并排判断
+- 同时打开 `assets/template-swiss.html`、当前生成页和需要修改的测试 deck,先做视觉并排判断
 - 等入场动效稳定后再截图或下判断,不要把动画中间态当成内容缺失
 - 先打开网页逐页看视觉:标题字重、头部间距、正文密度、图片对齐、nav 安全区
 - 再回代码看结构:该页是否用了正确版式,必选组件是否齐,可选组件是否过度
-- 对照原始 PPT 时以实际画面为准;raw CSS helper 只能辅助,不能替代视觉判断
+- 对照 `assets/template-swiss.html` 时以实际画面为准;raw CSS helper 只能辅助,不能替代视觉判断
 - 判断问题来源:版式选错 / 必选组件缺失 / 可选组件滥用 / 间距和安全区问题
 - 通用版式(S03/S08/S11/S19)可多用;数据专用(S06/S07/S20/S21/S22)必须有真实数据或案例;结构专用(S14/S15/S17)必须有闭环、矩阵或层级关系
 ---

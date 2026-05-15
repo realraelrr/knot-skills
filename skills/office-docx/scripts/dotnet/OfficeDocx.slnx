@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="OfficeDocx.Cli/OfficeDocx.Cli.csproj" />
+  <Project Path="OfficeDocx.Core/OfficeDocx.Core.csproj" />
+</Solution>

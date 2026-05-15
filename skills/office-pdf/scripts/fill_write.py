@@ -32,10 +32,8 @@ import importlib.util
 
 def ensure_deps():
     if importlib.util.find_spec("pypdf") is None:
-        import subprocess
-        subprocess.check_call(
-            [sys.executable, "-m", "pip", "install", "--break-system-packages", "-q", "pypdf"]
-        )
+        print("Missing dependency: pypdf. Install with: python3 -m pip install pypdf", file=sys.stderr)
+        sys.exit(2)
 
 
 ensure_deps()

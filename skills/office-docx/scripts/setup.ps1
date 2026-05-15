@@ -4,6 +4,7 @@
 #Requires -Version 5.1
 
 param(
+    [switch]$InstallDeps,
     [switch]$Minimal,
     [switch]$SkipVerify,
     [switch]$Help
@@ -13,6 +14,7 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Split-Path -Parent $ScriptDir
 $DotnetDir = Join-Path $ScriptDir "dotnet"
+$CliProject = Join-Path $DotnetDir "OfficeDocx.Cli/OfficeDocx.Cli.csproj"
 $LogFile = Join-Path $ProjectDir ".setup.log"
 
 # --- Output Helpers ---
@@ -25,6 +27,7 @@ function Step  { Write-Host "`n=== $args ===" -ForegroundColor Blue }
 if ($Help) {
     Write-Host @"
 Usage: setup.ps1 [options]
+  -InstallDeps   Install missing system/user dependencies
   -Minimal       Only install critical dependencies (skip pandoc, soffice, fonts)
   -SkipVerify    Skip the verification test at the end
   -Help          Show this help
@@ -36,6 +39,34 @@ Write-Host "============================================"
 Write-Host "  office-docx Setup & Initialization (Windows)"
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Write-Host "============================================"
+
+if (-not $InstallDeps) {
+    Step "Check-only mode"
+    Warn "This script will not install packages or modify user config."
+    Warn "Run with -InstallDeps only after approving environment changes."
+
+    $dotnetCmd = Get-Command dotnet -ErrorAction SilentlyContinue
+    if (-not $dotnetCmd) {
+        Fail ".NET SDK not found. Install .NET 8+ or rerun with -InstallDeps."
+        exit 1
+    }
+
+    $dotnetVer = & dotnet --version 2>$null
+    $majorVer = [int]($dotnetVer -split '\.')[0]
+    if ($majorVer -lt 8) {
+        Fail ".NET SDK $dotnetVer found, but office-docx requires 8.0+."
+        exit 1
+    }
+
+    if (-not (Test-Path $CliProject)) {
+        Fail "office-docx CLI project missing under $DotnetDir"
+        exit 1
+    }
+
+    Log "dotnet $dotnetVer available"
+    Log "office-docx project files present"
+    exit 0
+}
 
 "" | Set-Content $LogFile
 
@@ -73,7 +104,7 @@ if (-not $dotnetCmd -or $majorVer -lt 8) {
     } elseif ($HasScoop) {
         scoop install dotnet-sdk 2>>$LogFile
     } else {
-        Fail "Cannot auto-install .NET SDK. Download from: https://dotnet.microsoft.com/download"
+        Fail "Cannot install .NET SDK automatically. Download from: https://dotnet.microsoft.com/download"
         Fail "After installing, restart PowerShell and re-run this script."
         exit 1
     }
@@ -201,10 +232,8 @@ if (-not (Test-Path $DotnetDir)) {
     exit 1
 }
 
-Push-Location $DotnetDir
-
 Info "Restoring NuGet packages..."
-$restoreResult = & dotnet restore --verbosity quiet 2>&1
+$restoreResult = & dotnet restore $CliProject --verbosity quiet 2>&1
 if ($LASTEXITCODE -ne 0) {
     Fail "NuGet restore failed:"
     $restoreResult | ForEach-Object { Fail "  $_" }
@@ -212,23 +241,19 @@ if ($LASTEXITCODE -ne 0) {
     Fail "  - No internet (NuGet needs to download packages)"
     Fail "  - Corporate proxy/firewall blocking nuget.org"
     Fail "  - Insufficient disk space"
-    Fail "Try: dotnet restore --verbosity detailed"
-    Pop-Location
+    Fail "Try: dotnet restore $CliProject --verbosity detailed"
     exit 1
 }
 Log "NuGet packages restored"
 
 Info "Building project..."
-$buildResult = & dotnet build --verbosity quiet --no-restore 2>&1
+$buildResult = & dotnet build $CliProject --verbosity quiet --no-restore 2>&1
 if ($LASTEXITCODE -ne 0) {
     Fail "Build failed:"
     $buildResult | ForEach-Object { Fail "  $_" }
-    Pop-Location
     exit 1
 }
 Log "Project built successfully"
-
-Pop-Location
 
 # --- Verification ---
 if (-not $SkipVerify) {
@@ -237,10 +262,8 @@ if (-not $SkipVerify) {
     $testOutput = Join-Path $env:TEMP "office-docx-setup-test-$PID.docx"
 
     Info "Creating a test document..."
-    Push-Location $DotnetDir
-    $testResult = & dotnet run --project KnotSkillsDocx.Cli -- create --type report --output $testOutput --title "Setup Test" 2>&1
+    $testResult = & dotnet run --project $CliProject -- create --type report --output $testOutput --title "Setup Test" 2>&1
     $testExitCode = $LASTEXITCODE
-    Pop-Location
 
     if ($testExitCode -eq 0 -and (Test-Path $testOutput)) {
         Log "Test document created: $testOutput"
@@ -269,6 +292,6 @@ Write-Host "  pandoc:      $pandocInfo"
 Write-Host "  Project:     $DotnetDir"
 Write-Host ""
 Write-Host "  Usage:"
-Write-Host "    dotnet run --project $DotnetDir\KnotSkillsDocx.Cli -- create --type report --output my_report.docx"
+Write-Host "    dotnet run --project $DotnetDir\OfficeDocx.Cli -- create --type report --output my_report.docx"
 Write-Host ""
 Write-Host "  Log file: $LogFile"

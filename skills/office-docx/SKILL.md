@@ -11,25 +11,13 @@ metadata:
     - "IEEE / ACM / APA / MLA / Chicago / Turabian Style Guides"
     - "Springer LNCS / Nature / HBR Document Templates"
 description: >
-  Professional DOCX document creation, editing, and formatting using OpenXML SDK (.NET).
-  Three pipelines: (A) create new documents from scratch, (B) fill/edit content in existing
-  documents, (C) apply template formatting with XSD validation gate-check.
-  MUST use this skill whenever the user wants to produce, modify, or format a Word document —
-  including when they say "write a report", "draft a proposal", "make a contract",
-  "fill in this form", "reformat to match this template", or any task whose final output
-  is a .docx file. Even if the user doesn't mention "docx" explicitly, if the task
-  implies a printable/formal document, use this skill.
-triggers:
-  - Word
-  - docx
-  - document
-  - 文档
-  - Word文档
-  - 报告
-  - 合同
-  - 公文
-  - 排版
-  - 套模板
+  Create, edit, fill, validate, or format native Word DOCX files.
+  Use only when the requested input or final deliverable is a .docx/.doc Word
+  file, or when the user explicitly asks for Word document formatting,
+  placeholders, template application, tracked changes, comments, headers,
+  footers, tables, or DOCX validation. Do not use for plain text drafting,
+  general reports, Markdown, PDF, or knowledge extraction unless DOCX output
+  is explicitly required.
 ---
 
 # Office DOCX Skill
@@ -38,18 +26,21 @@ Create, edit, and format DOCX documents via CLI tools or direct C# scripts built
 
 ## Setup
 
-**First time:** `bash scripts/setup.sh` (or `powershell scripts/setup.ps1` on Windows, `--minimal` to skip optional deps).
+**First operation in session:** run `scripts/env_check.sh`. Do not proceed if it prints `NOT READY`.
 
-**First operation in session:** `scripts/env_check.sh` — do not proceed if `NOT READY`. (Skip on subsequent operations within the same session.)
+`scripts/setup.sh` and `scripts/setup.ps1` are explicit environment setup helpers.
+They may install system packages or modify user-level tool configuration, so run
+them only after the user has approved environment changes. Use
+`bash scripts/setup.sh --install-deps` or `powershell scripts/setup.ps1 -InstallDeps`.
 
 ## Quick Start: Direct C# Path
 
 When the task requires structural document manipulation (custom styles, complex tables, multi-section layouts, headers/footers, TOC, images), write C# directly instead of wrestling with CLI limitations. Use this scaffold:
 
 ```csharp
-// File: scripts/dotnet/task.csx  (or a new .cs in a Console project)
-// dotnet run --project scripts/dotnet/MiniMaxAIDocx.Cli -- run-script task.csx
-#r "nuget: DocumentFormat.OpenXml, 3.2.0"
+// Use this pattern in a temporary Console project or targeted repo code.
+// For bundled commands, use the CLI section below.
+// Add the DocumentFormat.OpenXml package before compiling.
 
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -70,7 +61,7 @@ mainPart.Document = new Document(new Body());
 
 All CLI commands below use `$CLI` as shorthand for:
 ```bash
-dotnet run --project scripts/dotnet/MiniMaxAIDocx.Cli --
+dotnet run --project scripts/dotnet/OfficeDocx.Cli --
 ```
 
 ## Pipeline routing
@@ -111,7 +102,7 @@ Analyze structure for editing scenarios: `$CLI analyze --input document.docx`
 Read `references/scenario_a_create.md`, `references/typography_guide.md`, and `references/design_principles.md` first. Pick an aesthetic recipe from `Samples/AestheticRecipeSamples.cs` that matches the document type — do not invent formatting values. For CJK, also read `references/cjk_typography.md`.
 
 **Choose your path:**
-- **Simple** (plain text, minimal formatting): use CLI — `$CLI create --type report --output out.docx --config content.json`
+- **Simple** (plain text, minimal formatting): use CLI — `$CLI create --type report --output out.docx --content-json content.json`
 - **Structural** (custom styles, multi-section, TOC, images, complex tables): write C# directly. Read the relevant `Samples/*.cs` first.
 
 CLI options: `--type` (report|letter|memo|academic), `--title`, `--author`, `--page-size` (letter|a4|legal|a3), `--margins` (standard|narrow|wide), `--header`, `--footer`, `--page-numbers`, `--toc`, `--content-json`.
@@ -127,14 +118,17 @@ Read `references/scenario_b_edit_content.md` first. Preview → analyze → edit
 - **Structural** (add/reorganize sections, modify styles, manipulate tables, insert images): write C# directly. Read `references/openxml_element_order.md` and the relevant `Samples/*.cs`.
 
 Available CLI edit subcommands:
-- `replace-text --find "X" --replace "Y"`
-- `fill-placeholders --data '{"key":"value"}'`
-- `fill-table --data table.json`
-- `insert-section`, `remove-section`, `update-header-footer`
+- `replace-text --search "X" --replace "Y"` with optional `--regex`
+- `list-placeholders` with optional `--pattern`
+- `fill-placeholders --mapping values.json` with optional `--pattern`
+- `fill-table --table-index 0 --csv rows.csv` with optional `--append`
+- `insert-paragraph --text "..."` with optional `--style` and `--after-paragraph`
+- `update-field --field TITLE --value "New Title"`
 
 ```bash
-$CLI edit replace-text --input in.docx --output out.docx --find "OLD" --replace "NEW"
-$CLI edit fill-placeholders --input in.docx --output out.docx --data '{"name":"John"}'
+$CLI edit replace-text --input in.docx --output out.docx --search "OLD" --replace "NEW"
+$CLI edit fill-placeholders --input in.docx --output out.docx --mapping values.json
+$CLI edit fill-table --input in.docx --output out.docx --table-index 0 --csv rows.csv
 ```
 
 Then run the **validation pipeline**. Also run diff to verify minimal changes:
@@ -152,11 +146,13 @@ $CLI apply-template --input source.docx --template template.docx --output out.do
 
 For complex template operations (multi-template merge, per-section headers/footers, style merging), write C# directly — see Critical Rules below for required patterns.
 
-Run the **validation pipeline**, then the **hard gate-check**:
+Run the **validation pipeline**, then compare against the template:
 ```bash
-$CLI validate --input out.docx --gate-check assets/xsd/business-rules.xsd
+$CLI validate --input out.docx --business
+$CLI validate --input out.docx --gate-check template.docx
 ```
-Gate-check is a **hard requirement**. Do NOT deliver until it passes. If it fails: diagnose, fix, re-run.
+The `--gate-check` argument is a template DOCX, not an XSD file. Do NOT deliver
+until validation passes. If it fails: diagnose, fix, re-run.
 
 Also diff to verify content preservation: `$CLI diff --before source.docx --after out.docx`
 
@@ -254,7 +250,7 @@ Load as needed — don't load all at once. Pick the most relevant files for the 
 | `Samples/TrackChangesSamples.cs` | Revisions: insertions (w:t), deletions (w:delText!), formatting changes, accept/reject all, move tracking |
 | `Samples/AestheticRecipeSamples.cs` | 13 aesthetic recipes from authoritative sources: ModernCorporate, AcademicThesis, ExecutiveBrief, ChineseGovernment (GB/T 9704), MinimalModern, IEEE Conference, ACM sigconf, APA 7th, MLA 9th, Chicago/Turabian, Springer LNCS, Nature, HBR — each with exact values from official style guides |
 
-Note: `Samples/` path is relative to `scripts/dotnet/MiniMaxAIDocx.Core/`.
+Note: `Samples/` path is relative to `scripts/dotnet/OfficeDocx.Core/`.
 
 ### Markdown references (read when you need specifications or design rules)
 

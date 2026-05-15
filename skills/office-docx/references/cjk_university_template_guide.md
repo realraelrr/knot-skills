@@ -39,11 +39,7 @@ Some templates define custom styles with Chinese names:
 
 ```bash
 # Extract all styleIds from the template
-$CLI analyze --input template.docx --styles-only
-
-# Or manually:
-# unzip template.docx word/styles.xml
-# Search for w:styleId= in the extracted file
+unzip -p template.docx word/styles.xml | grep 'w:styleId=' | head -40
 ```
 
 Look at the first few styleIds. If you see `1`, `2`, `3`, `a`, `a0` → Pattern A.

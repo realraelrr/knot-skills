@@ -35,7 +35,7 @@ Do NOT use when: the user wants to change the look/style of the entire document 
 
 ### Use CLI Edit Command When:
 - Replacing placeholder text (e.g., `{{fieldName}}` → actual value)
-- Filling table data from JSON
+- Filling table data from CSV
 - Updating document properties (title, author)
 - Simple text insertions or deletions
 
@@ -54,7 +54,8 @@ The CLI natively supports `{{fieldName}}` placeholders:
 
 ```bash
 # Replace all {{placeholders}} from a JSON map
-dotnet run ... edit input.docx --fill-placeholders data.json --output filled.docx
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  edit fill-placeholders --input input.docx --output filled.docx --mapping data.json
 ```
 
 Where `data.json`:
@@ -69,7 +70,8 @@ Where `data.json`:
 
 Other placeholder formats (`$FIELD$`, `[PLACEHOLDER]`) require text replacement:
 ```bash
-dotnet run ... edit input.docx --replace "$DATE$" "March 21, 2026" --output updated.docx
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  edit replace-text --input input.docx --output updated.docx --search '$DATE$' --replace "March 21, 2026"
 ```
 
 ---
@@ -128,31 +130,20 @@ Strategy:
 Tables are 0-indexed in document order:
 
 ```bash
-dotnet run ... edit input.docx --table-index 0 --table-data data.json --output updated.docx
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  edit fill-table --input input.docx --output updated.docx --table-index 0 --csv data.csv
 ```
 
-### By Header Matching
+### Table Data CSV Format
 
-Find a table by its header row content:
-
-```bash
-dotnet run ... edit input.docx --table-match "Name,Amount,Date" --table-data data.json
+```csv
+Name,Amount,Date
+Alice Johnson,$5,000,2026-03-15
+Bob Smith,$3,200,2026-03-18
 ```
 
-### Table Data JSON Format
-
-```json
-{
-  "rows": [
-    ["Alice Johnson", "$5,000", "2026-03-15"],
-    ["Bob Smith", "$3,200", "2026-03-18"]
-  ],
-  "appendRows": true
-}
-```
-
-- `appendRows: true` — add rows after existing data
-- `appendRows: false` (default) — replace all data rows (keeps header row)
+By default, `fill-table` replaces all rows after the header. Add `--append` to
+append rows instead.
 
 ### Direct XML Table Editing
 
@@ -280,11 +271,9 @@ Deleting text with tracking:
 After editing, always compare the before and after states:
 
 ```bash
-# Structural diff — shows only changed elements
-dotnet run ... diff original.docx modified.docx
-
-# Text-only diff — shows content changes
-dotnet run ... diff original.docx modified.docx --text-only
+# Structural and text diff summary
+dotnet run --project scripts/dotnet/OfficeDocx.Cli -- \
+  diff --before original.docx --after modified.docx
 ```
 
 Verify:

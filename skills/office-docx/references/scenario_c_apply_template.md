@@ -15,13 +15,14 @@ Do NOT use when: the user wants to edit content (→ Scenario B) or create from 
 ## Workflow
 
 ```
-1. Analyze source    → CLI: analyze source.docx      (list styles, fonts, structure)
-2. Analyze template  → CLI: analyze template.docx     (list styles, fonts, structure)
+1. Analyze source    → CLI: analyze --input source.docx      (structure summary)
+2. Analyze template  → CLI: analyze --input template.docx     (structure summary)
 3. Map styles        → Create mapping plan (source style → template style)
-4. Apply template    → CLI: apply-template source.docx --template template.docx --output result.docx
-5. Validate (XSD)    → CLI: validate result.docx --xsd wml-subset.xsd
-6. GATE-CHECK        → CLI: validate result.docx --xsd business-rules.xsd   ← MUST PASS
-7. Diff verify       → CLI: diff source.docx result.docx --text-only   (content must be identical)
+4. Apply template    → CLI: apply-template --input source.docx --template template.docx --output result.docx
+5. Validate (XSD)    → CLI: validate --input result.docx --xsd assets/xsd/wml-subset.xsd
+6. BUSINESS CHECK    → CLI: validate --input result.docx --business   ← MUST PASS
+7. TEMPLATE CHECK    → CLI: validate --input result.docx --gate-check template.docx
+8. Diff verify       → CLI: diff --before source.docx --after result.docx   (content must be identical)
 ```
 
 ---
@@ -141,16 +142,16 @@ When template style names differ from source style names, a mapping is required.
 Before any template application, extract and compare styleIds from both documents:
 
 ```bash
-# Extract all styleIds from source
-$CLI analyze --input source.docx --styles-only
+# Extract styleIds used by source paragraphs
+unzip -p source.docx word/document.xml | grep -o 'w:pStyle[^>]*w:val="[^"]*"' | sort -u
 # Output example:
 #   Heading1  (paragraph, basedOn: Normal)
 #   Heading2  (paragraph, basedOn: Normal)
 #   Normal    (paragraph)
 #   ListBullet (paragraph, basedOn: Normal)
 
-# Extract all styleIds from template
-$CLI analyze --input template.docx --styles-only
+# Extract styleIds defined by the template
+unzip -p template.docx word/styles.xml | grep 'w:styleId=' | head -80
 # Output example:
 #   1         (paragraph, basedOn: a, name: "heading 1")
 #   2         (paragraph, basedOn: a, name: "heading 2")
@@ -358,13 +359,13 @@ The corresponding text in document.xml references this rId:
 
 ---
 
-## XSD Gate-Check
+## Business Rules Gate-Check
 
 ### What It Is
 
-After template application, the output document **MUST** pass `business-rules.xsd` validation. This is a **hard gate** — if it fails, the document is **NOT deliverable**.
+After template application, the output document **MUST** pass business-rules validation. This is a **hard gate** — if it fails, the document is **NOT deliverable**.
 
-### What business-rules.xsd Checks
+### What Business Rules Check
 
 | Rule | What It Validates |
 |------|-------------------|
@@ -447,7 +448,7 @@ Re-validate after every fix until gate-check passes.
 After template application, verify:
 
 1. **Content preserved** — text diff shows zero content changes
-2. **Gate-check passed** — `business-rules.xsd` validation succeeds
+2. **Gate-check passed** — business-rules validation succeeds
 3. **Styles applied** — headings, body text, tables use template formatting
 4. **Images intact** — all images render correctly (relationship IDs valid)
 5. **Lists working** — numbered and bulleted lists display correctly

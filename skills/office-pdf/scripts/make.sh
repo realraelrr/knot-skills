@@ -4,7 +4,7 @@
 #
 # Commands:
 #   check                          Verify all dependencies
-#   fix                            Auto-install missing dependencies
+#   fix                            Print manual dependency install commands
 #   run   --title T --type TYPE    Full pipeline -> output.pdf
 #         --out FILE               Output path (default: output.pdf)
 #         --author A --date D
@@ -54,7 +54,7 @@ cmd_check() {
   if python3 -c "import reportlab" 2>/dev/null; then
     green "  ✓ reportlab"
   else
-    yellow "  ⚠ reportlab not installed  (run: make.sh fix)"
+    yellow "  ⚠ reportlab not installed  (see: make.sh fix)"
     ok=false
   fi
 
@@ -62,7 +62,7 @@ cmd_check() {
   if python3 -c "import pypdf" 2>/dev/null; then
     green "  ✓ pypdf"
   else
-    yellow "  ⚠ pypdf not installed  (run: make.sh fix)"
+    yellow "  ⚠ pypdf not installed  (see: make.sh fix)"
     ok=false
   fi
 
@@ -79,7 +79,7 @@ cmd_check() {
      node -e "require(require('child_process').execSync('npm root -g').toString().trim()+'/playwright')" 2>/dev/null; then
     green "  ✓ playwright"
   else
-    yellow "  ⚠ playwright not found  (run: make.sh fix)"
+    yellow "  ⚠ playwright not found  (see: make.sh fix)"
     ok=false
   fi
 
@@ -87,46 +87,35 @@ cmd_check() {
   if python3 -c "import matplotlib" 2>/dev/null; then
     green "  ✓ matplotlib (math, chart, flowchart blocks enabled)"
   else
-    yellow "  ⚠ matplotlib not installed - math/chart/flowchart blocks degrade to text  (run: make.sh fix)"
+    yellow "  ⚠ matplotlib not installed - math/chart/flowchart blocks degrade to text  (see: make.sh fix)"
   fi
 
   if $ok; then
     green "\nAll dependencies satisfied."
     exit 0
   else
-    yellow "\nSome dependencies missing. Run: bash make.sh fix"
+    yellow "\nSome dependencies missing. Run: bash make.sh fix for manual install commands."
     exit 2
   fi
 }
 
 # ── fix ────────────────────────────────────────────────────────────────────────
 cmd_fix() {
-  bold "Installing missing dependencies..."
-  local rc=0
+  bold "Manual dependency install commands"
+  yellow "No commands are executed by make.sh fix."
+  cat <<'EOF'
 
-  # Python packages
-  if command -v python3 &>/dev/null; then
-    python3 -m pip install --break-system-packages -q reportlab pypdf matplotlib 2>/dev/null \
-      || python3 -m pip install -q reportlab pypdf matplotlib 2>/dev/null \
-      || { yellow "  pip install failed - try: pip install reportlab pypdf matplotlib"; rc=3; }
-    green "  ✓ Python packages installed (reportlab, pypdf, matplotlib)"
-  fi
+Python packages:
+  python3 -m pip install reportlab pypdf matplotlib
 
-  # Playwright
-  if command -v npm &>/dev/null; then
-    npm install -g playwright --silent 2>/dev/null && \
-    npx playwright install chromium --silent 2>/dev/null && \
-    green "  ✓ Playwright + Chromium installed" || \
-    { yellow "  playwright install failed - try manually"; rc=3; }
-  else
-    yellow "  npm not found - cannot install Playwright automatically"
-    rc=2
-  fi
+Playwright and Chromium:
+  npm install -g playwright
+  npx playwright install chromium
 
-  if [[ $rc -eq 0 ]]; then
-    green "\nAll dependencies installed. Run: bash make.sh check"
-  fi
-  exit $rc
+After installing, verify with:
+  bash scripts/make.sh check
+EOF
+  exit 0
 }
 
 # ── run ────────────────────────────────────────────────────────────────────────
@@ -465,7 +454,7 @@ main() {
     echo ""
     echo "Commands:"
     echo "  check                             Verify all dependencies"
-    echo "  fix                               Auto-install missing deps"
+    echo "  fix                               Print manual dependency install commands"
     echo "  run    --title T --type TYPE      CREATE: full pipeline -> PDF"
     echo "         [--author A] [--date D] [--subtitle S]"
     echo "         [--abstract A] [--cover-image URL]"

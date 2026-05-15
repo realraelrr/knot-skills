@@ -40,11 +40,14 @@ def ensure_deps():
     missing = [p for p in ("reportlab", "pypdf")
                if importlib.util.find_spec(p) is None]
     if missing:
-        import subprocess
-        subprocess.check_call(
-            [sys.executable, "-m", "pip", "install",
-             "--break-system-packages", "-q"] + missing
+        print(
+            "Missing dependencies: "
+            + ", ".join(missing)
+            + ". Install with: python3 -m pip install "
+            + " ".join(missing),
+            file=sys.stderr,
         )
+        sys.exit(2)
 
 
 ensure_deps()
