@@ -2,19 +2,27 @@
 set -eu
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+KNOT_ROOT="${KNOT_ROOT:-$(cd "$ROOT/../.." && pwd)}"
 DEST="${CODEX_HOME:-$HOME/.codex}/skills"
 
 mkdir -p "$DEST"
 
-link_skill() {
+link_path() {
   name="$1"
-  target="$ROOT/skills/$name"
+  target="$2"
   dest="$DEST/$name"
+
+  if [ ! -d "$target" ]; then
+    printf 'Missing skill source for %s: %s\n' "$name" "$target" >&2
+    return 1
+  fi
 
   if [ ! -f "$target/SKILL.md" ]; then
     printf 'Missing SKILL.md for %s: %s\n' "$name" "$target" >&2
     return 1
   fi
+
+  target="$(cd "$target" && pwd)"
 
   if [ -e "$dest" ] || [ -L "$dest" ]; then
     if [ -L "$dest" ]; then
@@ -30,6 +38,24 @@ link_skill() {
   printf '%s -> %s\n' "$name" "$target"
 }
 
-for skill in office-xlsx office-pptx office-docx office-pdf web-ppt handoff; do
-  link_skill "$skill"
+link_bundled_skill() {
+  name="$1"
+  link_path "$name" "$ROOT/skills/$name"
+}
+
+link_first_party_skill() {
+  name="$1"
+  relative_target="$2"
+  link_path "$name" "$KNOT_ROOT/$relative_target"
+}
+
+printf 'Office Pack\n'
+for skill in office-xlsx office-pptx web-ppt office-docx office-pdf; do
+  link_bundled_skill "$skill"
 done
+
+printf '\nAgent Workbench\n'
+link_first_party_skill "planning-with-files" "components/planning-with-files/.codex/skills/planning-with-files"
+link_first_party_skill "docling-skill" "components/docling-skill"
+link_first_party_skill "md-for-human" "components/md-for-human/.codex/skills/md-for-human"
+link_first_party_skill "handoff" "components/codex-handoff-skill"

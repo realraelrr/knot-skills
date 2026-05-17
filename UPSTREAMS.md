@@ -10,7 +10,16 @@ mirror entire upstream repositories.
 | `office-docx` | `MiniMax-AI/skills`, `skills/minimax-docx` | `60aaae52bb2af8162732751a4332f62a5fef518b` |
 | `office-pdf` | `MiniMax-AI/skills`, `skills/minimax-pdf` | `60aaae52bb2af8162732751a4332f62a5fef518b` |
 | `web-ppt` | `realraelrr/guizang-ppt-skill` | `b2ce44db48dd68b9629927ec0ef7da9b864a0f27` |
-| `handoff` | `realraelrr/codex-handoff-skill` | `bf94f6eb211cb1bb867fce09e277e7021130cc9e` |
+
+First-party linked skills are not vendored here. The installer links them from
+sibling component repositories in the Knot workspace:
+
+| Skill | Component repository | Local target |
+| --- | --- | --- |
+| `planning-with-files` | `realraelrr/planning-with-files` | `components/planning-with-files/.codex/skills/planning-with-files` |
+| `docling-skill` | `realraelrr/docling-skill` | `components/docling-skill` |
+| `md-for-human` | `realraelrr/md-for-human` | `components/md-for-human/.codex/skills/md-for-human` |
+| `handoff` | `realraelrr/codex-handoff-skill` | `components/codex-handoff-skill` |
 
 Renames are Knot distribution names only. Upstream implementation paths,
 licenses, and script names may still carry their original project names when
