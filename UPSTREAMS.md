@@ -17,9 +17,9 @@ sibling component repositories in the Knot workspace:
 | Skill | Component repository | Local target |
 | --- | --- | --- |
 | `planning-with-files` | `realraelrr/planning-with-files` | `components/planning-with-files/.codex/skills/planning-with-files` |
-| `docling-skill` | `realraelrr/docling-skill` | `components/docling-skill` |
+| `docling-skill` | `realraelrr/docling-skill` | `components/docling-skill/.codex/skills/docling-skill` |
 | `md-for-human` | `realraelrr/md-for-human` | `components/md-for-human/.codex/skills/md-for-human` |
-| `handoff` | `realraelrr/codex-handoff-skill` | `components/codex-handoff-skill` |
+| `handoff` | `realraelrr/handoff-skill` | `components/handoff-skill/.codex/skills/handoff` |
 
 Renames are Knot distribution names only. Upstream implementation paths,
 licenses, and script names may still carry their original project names when

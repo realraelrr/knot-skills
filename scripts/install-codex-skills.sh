@@ -56,6 +56,6 @@ done
 
 printf '\nAgent Workbench\n'
 link_first_party_skill "planning-with-files" "components/planning-with-files/.codex/skills/planning-with-files"
-link_first_party_skill "docling-skill" "components/docling-skill"
+link_first_party_skill "docling-skill" "components/docling-skill/.codex/skills/docling-skill"
 link_first_party_skill "md-for-human" "components/md-for-human/.codex/skills/md-for-human"
-link_first_party_skill "handoff" "components/codex-handoff-skill"
+link_first_party_skill "handoff" "components/handoff-skill/.codex/skills/handoff"
