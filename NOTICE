@@ -15,9 +15,9 @@ Web presentation skill:
   Source: https://github.com/realraelrr/guizang-ppt-skill
   License: MIT, see skills/web-ppt/LICENSE.
 
-Handoff skill:
-  Source: https://github.com/realraelrr/codex-handoff-skill
-  License: MIT, see skills/handoff/LICENSE.
-
 Knot distribution names differ from upstream names to provide a stable default
 skill surface for Knot users.
+
+First-party linked skills such as planning-with-files, docling-skill,
+md-for-human, and handoff are not vendored in this repository. Their licensing
+and notices live in their component repositories.
