@@ -1,5 +1,6 @@
 Knot Skills vendors content from multiple upstream skill repositories.
-Knot-specific packaging files are MIT licensed under the top-level LICENSE.
+Knot-specific packaging files are Apache-2.0 licensed under the top-level
+LICENSE.
 Vendored skill content retains the upstream licenses listed below.
 
 Office skills:

@@ -2,6 +2,8 @@
 
 Curated default skills for the Knot agent workspace.
 
+[中文 README](README.zh-CN.md)
+
 Knot default skills are split into two groups.
 
 ## Office Pack
@@ -47,3 +49,10 @@ linked skills from the surrounding Knot root. Override that root with
 `KNOT_ROOT=/path/to/knot-agent` when needed.
 
 Upstream source and sync notes are tracked in `UPSTREAMS.md`.
+
+## License
+
+Knot-specific packaging is licensed under the Apache License 2.0. See
+[LICENSE](LICENSE).
+
+Vendored skill content keeps its upstream license. See [NOTICE](NOTICE).
