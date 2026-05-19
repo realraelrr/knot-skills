@@ -21,9 +21,10 @@ Create a single-file HTML deck using one of the bundled templates:
 Use this skill for browser-based presentation deliverables. Do not use it for
 native PowerPoint output, document extraction, or knowledge ingestion.
 
-Write final global deliverables under `workspace/deliverables/`. For
-IM-triggered work, write under the current session `deliverables/` directory
-and use the Knot delivery helper expected by the workspace.
+Write final deliverables under the active user workspace `deliverables/`
+directory. For group-chat work, write to the current group workspace
+`deliverables/` directory only when the output is explicitly a shared group
+asset. Use the Knot delivery helper expected by the workspace.
 
 ## Workflow
 
