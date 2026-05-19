@@ -106,7 +106,7 @@ cmd_fix() {
   cat <<'EOF'
 
 Python packages:
-  python3 -m pip install reportlab pypdf matplotlib
+  python3 -m pip install -r ../../requirements.txt
 
 Playwright and Chromium:
   npm install -g playwright

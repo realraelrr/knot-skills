@@ -3,7 +3,7 @@ set -eu
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 KNOT_ROOT="${KNOT_ROOT:-$(cd "$ROOT/../.." && pwd)}"
-DEST="${CODEX_HOME:-$HOME/.codex}/skills"
+DEST="${SKILLS_HOME:-${CODEX_HOME:-$HOME/.codex}/skills}"
 
 mkdir -p "$DEST"
 

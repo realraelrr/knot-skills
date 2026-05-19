@@ -180,7 +180,7 @@ bash scripts/make.sh demo    # build a sample PDF
 | Tool | Used by | Install |
 |---|---|---|
 | Python 3.9+ | all `.py` scripts | system |
-| `reportlab` | `render_body.py` | `pip install reportlab` |
-| `pypdf` | fill, merge, reformat | `pip install pypdf` |
+| `reportlab` | `render_body.py` | `pip install -r ../../requirements.txt` from this skill directory |
+| `pypdf` | fill, merge, reformat | `pip install -r ../../requirements.txt` from this skill directory |
 | Node.js 18+ | `render_cover.js` | system |
 | `playwright` + Chromium | `render_cover.js` | `npm install -g playwright && npx playwright install chromium` |

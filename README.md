@@ -34,9 +34,9 @@ Install into Codex:
 bash scripts/install-codex-skills.sh
 ```
 
-The install script links the curated allowlist into `$CODEX_HOME/skills` or
-`~/.codex/skills`: `office-xlsx`, `office-pptx`, `web-ppt`,
-`office-docx`, `office-pdf`, `planning-with-files`,
+The install script links the curated allowlist into `SKILLS_HOME`,
+`$CODEX_HOME/skills`, or `~/.codex/skills`: `office-xlsx`, `office-pptx`,
+`web-ppt`, `office-docx`, `office-pdf`, `planning-with-files`,
 `docling-skill`, `md-for-human`, and `handoff`.
 
 Existing symlinks with those names are replaced. Existing non-symlink
@@ -47,6 +47,9 @@ for bundled skills or in their first-party component repositories.
 When run from `components/knot-skills`, the installer resolves first-party
 linked skills from the surrounding Knot root. Override that root with
 `KNOT_ROOT=/path/to/knot-agent` when needed.
+
+Python runtime dependencies for the bundled helpers are pinned in
+`requirements.txt`; CI and local validation tools use `requirements-dev.txt`.
 
 Upstream source and sync notes are tracked in `UPSTREAMS.md`.
 

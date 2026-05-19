@@ -66,6 +66,10 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
 
+def warn(message: str):
+    print(f"Warning: {message}", file=sys.stderr)
+
+
 # ── Font registration ──────────────────────────────────────────────────────────
 def register_fonts(tokens: dict):
     """Register TTF fonts from token font_paths if present."""
@@ -73,8 +77,8 @@ def register_fonts(tokens: dict):
         if os.path.exists(fpath):
             try:
                 pdfmetrics.registerFont(TTFont(name, fpath))
-            except Exception:
-                pass
+            except Exception as exc:
+                warn(f"could not register font {name} from {fpath}: {exc}")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -331,7 +335,8 @@ def _render_math_png(expr: str, dpi: int = 180) -> bytes | None:
         plt.close(fig)
         buf.seek(0)
         return buf.read()
-    except Exception:
+    except Exception as exc:
+        warn(f"could not render math block: {exc}")
         return None
 
 
@@ -444,7 +449,8 @@ def _render_chart_png(item: dict, accent: str, dpi: int = 150) -> bytes | None:
         plt.close(fig)
         buf.seek(0)
         return buf.read()
-    except Exception:
+    except Exception as exc:
+        warn(f"could not render chart block: {exc}")
         return None
 
 
@@ -591,7 +597,8 @@ def _render_flowchart_png(item: dict, accent: str, dark: str,
         plt.close(fig)
         buf.seek(0)
         return buf.read()
-    except Exception:
+    except Exception as exc:
+        warn(f"could not render flowchart block: {exc}")
         return None
 
 
@@ -712,6 +719,7 @@ def _add_image(story: list, item: dict, ctx: dict):
             img.drawHeight = img.drawHeight * scale
         story.append(img)
     except Exception as e:
+        warn(f"could not render image {path}: {e}")
         story.append(Paragraph(f"[Image error: {e}]", ctx["styles"]["caption"]))
         return
     if item.get("caption"):

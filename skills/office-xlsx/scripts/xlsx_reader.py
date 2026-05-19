@@ -38,7 +38,8 @@ def detect_and_load(file_path: str, sheet_name_filter: str | None = None) -> dic
         import pandas as pd
     except ImportError:
         raise RuntimeError(
-            "pandas is not installed. Run: pip install pandas openpyxl"
+            "pandas is not installed. From the knot-skills root, run: "
+            "python3 -m pip install -r requirements.txt"
         )
 
     path = Path(file_path)
