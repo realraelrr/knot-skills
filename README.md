@@ -4,9 +4,10 @@ Curated default skills for the Knot agent workspace.
 
 [中文 README](README.zh-CN.md)
 
-This repository packages agent skills for local Codex workspaces: office file
-handling, document ingestion, Markdown rendering, file-based planning, and
-handoff protocols for fresh LLM agent sessions.
+Knot Skills is the skill distribution for the Knot digital worker runtime. It
+packages the office, ingestion, Markdown rendering, planning, and handoff
+capabilities that let a Codex-powered worker produce business deliverables,
+maintain recoverable work, and continue across multi-user workflows.
 
 Knot default skills are split into two groups.
 

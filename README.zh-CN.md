@@ -1,8 +1,10 @@
 # Knot Skills
 
-**Knot agent workspace 的默认 skill 集成包。**
+**Knot 数字员工运行底座的默认 skill 集成包。**
 
 [English README](README.md)
+
+`knot-skills` 为 Codex 驱动的企业数字员工提供办公文件、文档 ingestion、Markdown 渲染、文件化规划和 handoff 能力。它关注的是让 agent 能稳定产出业务交付物、保留可恢复工作状态，并在多用户 workflow 中继续推进任务。
 
 `knot-skills` 负责维护 Knot 默认启用的 skill 清单和安装器。它不试图复制整个上游仓库，只维护必要的 vendored skill，以及指向一等 first-party component 的链接规则。
 
