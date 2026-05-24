@@ -29,6 +29,9 @@ jobs:
       - name: Compile Python scripts
         run: python -m compileall scripts skills
 
+      - name: Canary install
+        run: bash tests/canary.sh
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:

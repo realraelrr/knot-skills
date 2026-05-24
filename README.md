@@ -49,6 +49,13 @@ directories are moved aside with a timestamped `.backup.*` suffix before the
 new links are created. Editable sources stay either in this repository
 for bundled skills or in their first-party component repositories.
 
+Run the integration canary to verify the curated install surface without testing
+upstream Office behavior:
+
+```sh
+bash tests/canary.sh
+```
+
 When run from `components/knot-skills`, the installer resolves first-party
 linked skills from the surrounding Knot root. Override that root with
 `KNOT_ROOT=/path/to/knot-agent` when needed.

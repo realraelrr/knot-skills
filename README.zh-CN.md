@@ -47,6 +47,12 @@ bash scripts/install-codex-skills.sh
 
 已有同名 symlink 会被替换；已有同名非 symlink 目录会被移动到带时间戳的 `.backup.*` 目录，避免直接覆盖。
 
+运行集成 canary 可验证 curated 安装入口，不测试上游 Office 行为：
+
+```sh
+bash tests/canary.sh
+```
+
 ## 组件边界
 
 - 本仓库 vendored Office Pack 和 `web-ppt` 所需的 skill 内容。
