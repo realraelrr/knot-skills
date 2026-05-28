@@ -14,7 +14,7 @@ Office skills:
 
 Web presentation skill:
   Source: https://github.com/realraelrr/guizang-ppt-skill
-  License: MIT, see skills/web-ppt/LICENSE.
+  License: AGPL-3.0, see skills/web-ppt/LICENSE.
 
 Knot distribution names differ from upstream names to provide a stable default
 skill surface for Knot users.

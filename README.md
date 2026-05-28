@@ -17,7 +17,8 @@ Office Pack skills are vendored in this repository:
 
 - `office-xlsx` - Excel, CSV, formulas, and spreadsheet formatting.
 - `office-pptx` - Native PowerPoint reading, editing, and generation.
-- `web-ppt` - Single-file HTML presentation decks.
+- `web-ppt` - Single-file HTML presentation decks. The vendored runtime is
+  AGPL-3.0 licensed.
 - `office-docx` - Word document creation, editing, filling, and formatting.
 - `office-pdf` - Polished PDF creation, form filling, and reformatting.
 
@@ -70,4 +71,6 @@ Upstream source and sync notes are tracked in `UPSTREAMS.md`.
 Knot-specific packaging is licensed under the Apache License 2.0. See
 [LICENSE](LICENSE).
 
-Vendored skill content keeps its upstream license. See [NOTICE](NOTICE).
+Vendored skill content keeps its upstream license. `web-ppt` is AGPL-3.0
+licensed; other vendored Office Pack skills are MIT licensed. See
+[NOTICE](NOTICE).

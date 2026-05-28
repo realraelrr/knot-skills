@@ -4,16 +4,16 @@
 
 ## Golden Source
 
-Bundled golden source:
+原始参考文件:
 
-`assets/template-swiss.html`
+`/Users/guohao/Documents/op7418的仓库/项目/Thin-Harness-Fat-Skills/ppt/index.html`
 
-瑞士主题生成时只能从下面登记的 22 个版式中选择。新增首页/尾页可以使用 Skill 里的 IKB ASCII 版本,但正文页必须来自这 22 个版式。
+瑞士主题生成时,除用户明确要求实验版式外,只能从下面登记的 22 个版式中选择。新增首页/尾页可以使用 Skill 里的 IKB ASCII 版本,但正文页必须来自这 22 个版式。
 
 ## 生成前硬规则
 
 1. 每个正文页都必须先选一个登记版式,并在 `<section>` 上写 `data-layout="Sxx"`。
-2. 不允许临时发明未出现在原始 22P 的正文结构。需要图片时,优先使用 `S22 Image Hero`;多图时使用 `S15/S16` 的原始网格骨架做图片格改造,不要发明新的证据墙。唯一登记的交互扩展是 `S08 + Swiss Map Component`,详见 `references/swiss-map-component.md`。
+2. 不允许临时发明 `P23/P24` 这类未出现在原始 22P 的正文结构。需要图片时,优先使用 `S22 Image Hero`;多图时使用 `S15/S16` 的原始网格骨架做图片格改造,不要发明新的证据墙。唯一登记的交互扩展是 `S08 + Swiss Map Component`,详见 `references/swiss-map-component.md`。
 3. 顶部中文标题默认左对齐并贴近左上内容轴。除原始 `S03/S09/S10` 这种 statement/split 版式外,不要把大标题放到页面水平中心。
 4. SVG 只能负责几何线条、圆、箭头、路径。不要在 SVG 里写可见文字;所有文字标签用 HTML 放在网格、卡片或 caption 里。
 5. 图片槽位和图片生成比例必须绑定。先确定版式和槽位,再生成图片。
@@ -74,13 +74,13 @@ Bundled golden source:
 - 图片格必须吸附原始卡片网格,不要让图片自己决定宽高。
 - 如果图片是按槽位重新生成的 `s15-grid-21x9` / `s16-brief-21x9`,容器必须用 `.frame-img.r-21x9` 铺满槽位,不要再加 `.fit-contain`,也不要用固定 `height:18vh` 这类短槽把长图缩小。
 - `.fit-contain` 只用于必须保留原始比例的用户截图或文字密集图片;一旦决定重生成图片,就应该按槽位比例重生成并铺满。
-- 如果原始截图比例不可控,先用 GPT-M 2.0 重生成“截图再设计”,再插入固定槽位。
+- 如果原始截图比例不可控,先按 `references/screenshot-framing.md` 做程序化比例适配;只有长截图、极窄截图或信息需要重构时,才用 GPT-M 2.0 重生成“截图再设计”。
 
 ## 禁止清单
 
 - 禁止 `text-align:center` 用在顶部中文大标题。
 - 禁止将顶部标题写进右侧 7.8fr 栏,造成视觉居中。
-- 禁止未登记正文页:例如临时图文拆分页、证据墙、三圆图自绘页。
+- 禁止未登记正文页:例如临时 `Swiss Image Split`、`Evidence Grid`、三圆图自绘页。
 - 禁止图片容器灰底包白底信息图。
 - 禁止 SVG 中出现 `<text>` 作为可见标签。
 - 禁止图片默认 `object-position:top center` 用于照片。

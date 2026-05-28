@@ -9,7 +9,7 @@ mirror entire upstream repositories.
 | `office-pptx` | `MiniMax-AI/skills`, `skills/pptx-generator` | `60aaae52bb2af8162732751a4332f62a5fef518b` |
 | `office-docx` | `MiniMax-AI/skills`, `skills/minimax-docx` | `60aaae52bb2af8162732751a4332f62a5fef518b` |
 | `office-pdf` | `MiniMax-AI/skills`, `skills/minimax-pdf` | `60aaae52bb2af8162732751a4332f62a5fef518b` |
-| `web-ppt` | `realraelrr/guizang-ppt-skill` | `b2ce44db48dd68b9629927ec0ef7da9b864a0f27` |
+| `web-ppt` | `realraelrr/guizang-ppt-skill` | `014c572454065e905477a7432ae331dfc0fe6070` |
 
 First-party linked skills are not vendored here. The installer links them from
 sibling component repositories in the Knot workspace:
@@ -25,6 +25,7 @@ Renames are Knot distribution names only. Upstream implementation paths,
 licenses, and script names may still carry their original project names when
 renaming them would break the skill.
 
-To refresh a vendored skill, copy only the relevant upstream skill directory,
-preserve license files, update the local `name:` in `SKILL.md`, and update the
-source commit in this file.
+To refresh a vendored skill, copy only the relevant upstream runtime files,
+preserve license files, keep any local `SKILL.md` entry adapter, and update the
+source commit in this file. For `web-ppt`, `assets/`, `references/`, `scripts/`,
+and `LICENSE` should match the recorded upstream commit.

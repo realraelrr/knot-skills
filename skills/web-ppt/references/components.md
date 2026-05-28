@@ -1,6 +1,6 @@
 # 组件参考 · Components
 
-这是 `web-ppt` skill 的组件手册。template.html 已经定义好了所有样式，这里只写"这个组件长什么样、怎么用"。
+这是 `guizang-ppt-skill` skill 的组件手册。template.html 已经定义好了所有样式，这里只写"这个组件长什么样、怎么用"。
 
 ## 目录
 
@@ -85,7 +85,7 @@
 <!-- ... 页面主体 ... -->
 
 <div class="foot">
-  <div class="title">项目名 · Product　|　example.com</div>
+  <div class="title">项目名 · CodePilot　|　github.com/codepilot</div>
   <div>Act I · Dev Numbers</div>
 </div>
 ```
@@ -220,8 +220,8 @@
 
 **Kicker** 是标题上方的小提示文字（等宽、全大写、小字号）：
 ```html
-<div class="kicker">关键周期 · 数据篇</div>
-<div class="h1-zh">我们完成了什么。</div>
+<div class="kicker">过去 64 天 · 开发篇</div>
+<div class="h1-zh">一个人，做了什么。</div>
 ```
 
 **Tag** 是独立的标签胶囊（带边框）：
@@ -277,7 +277,7 @@
 
 5. **信息图 / 截图再设计**：给 `.frame-img` 同时加 `.fit-contain`，避免图内文字和标注被裁切。
 
-6. **用户原始截图比例不合适时**：优先重新生成"截图再设计 / UI 情景图"到目标比例,不要把原图硬塞成长条。
+6. **用户原始截图比例不合适时**：优先按 `screenshot-framing.md` 做 CleanShot X 式程序化适配;只有截图太长、太窄或需要重构信息时,才重新生成"截图再设计 / UI 情景图"。
 
 ### Frame Caption 变体
 

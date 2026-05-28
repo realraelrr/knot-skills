@@ -10,7 +10,7 @@
 
 ## 硬规则
 
-- `<section>` 仍写 `data-layout="S08"`;不要新增自定义正文页。
+- `<section>` 仍写 `data-layout="S08"`;不要新增 `P23/P24` 或自定义正文页。
 - 页面结构必须是:顶部标题 + 左侧说明卡片 + 右侧地图卡片。
 - 地图标记由 HTML 组件组成:点 `.pin-dot` + 连线 `.pin-line` + 卡片 `.pin-card`。
 - SVG 只画 fallback 关系线,不要在 SVG 里写文字。

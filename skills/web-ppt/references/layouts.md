@@ -168,14 +168,14 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
     <div>Vol.01</div>
   </div>
   <div class="frame" style="display:grid; gap:4vh; align-content:center; min-height:80vh">
-    <div class="kicker" data-anim>内部分享 · Speaker</div>
-    <h1 class="h-hero" data-anim>主题标题</h1>
+    <div class="kicker" data-anim>私享会 · 李继刚</div>
+    <h1 class="h-hero" data-anim>一人公司</h1>
     <h2 class="h-sub" data-anim>被 AI 折叠的组织</h2>
     <p class="lead" style="max-width:60vw" data-anim>
-      一句能概括主题张力的开场说明。
+      一个 AI 创作者 —— 在 64 天里做了 11 万行代码、在 9 个平台上持续输出，生活节奏几乎没有被改变。
     </p>
     <div class="meta-row" data-anim>
-      <span>Presenter</span><span>·</span><span>Role / Organization</span>
+      <span>歸藏 Guizang</span><span>·</span><span>独立创作者 / CodePilot 作者</span>
     </div>
   </div>
   <div class="foot">
@@ -227,34 +227,34 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 ```html
 <section class="slide light">
   <div class="chrome">
-    <div>关键周期 · 数据篇</div>
+    <div>过去 64 天 · 开发篇</div>
     <div>Act I / Dev · 02 / 25</div>
   </div>
   <div class="frame" style="padding-top:6vh">
-    <div class="kicker" data-anim>阶段成果，量化表达。</div>
-    <h2 class="h-xl" data-anim>关键周期</h2>
-    <p class="lead" style="margin-bottom:5vh" data-anim>从 0 到可交付产品。</p>
+    <div class="kicker" data-anim>一个人，做了什么。</div>
+    <h2 class="h-xl" data-anim>过去 64 天</h2>
+    <p class="lead" style="margin-bottom:5vh" data-anim>从 0 到开源 CodePilot。</p>
 
     <div class="grid-6" style="margin-top:6vh">
       <div class="stat-card" data-anim>
         <div class="stat-label">Duration</div>
-        <div class="stat-nb">90 <span class="stat-unit">天</span></div>
-        <div class="stat-note">从启动到交付</div>
+        <div class="stat-nb">64 <span class="stat-unit">天</span></div>
+        <div class="stat-note">从 0 到现在</div>
       </div>
       <div class="stat-card" data-anim>
         <div class="stat-label">Lines of Code</div>
-        <div class="stat-nb">120K+</div>
-        <div class="stat-note">累计生产规模</div>
+        <div class="stat-nb">110K+</div>
+        <div class="stat-note">一行行写到 11 万+</div>
       </div>
       <div class="stat-card" data-anim>
         <div class="stat-label">GitHub Stars</div>
-        <div class="stat-nb">5,200+</div>
-        <div class="stat-note">社区反馈信号</div>
+        <div class="stat-nb">5,166</div>
+        <div class="stat-note">一个开源仓库</div>
       </div>
       <div class="stat-card" data-anim>
         <div class="stat-label">Downloads</div>
         <div class="stat-nb">41K+</div>
-        <div class="stat-note">真实使用规模</div>
+        <div class="stat-note">装到了几万台电脑里</div>
       </div>
       <div class="stat-card" data-anim>
         <div class="stat-label">AI Providers</div>
@@ -264,12 +264,12 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
       <div class="stat-card" data-anim>
         <div class="stat-label">Commits</div>
         <div class="stat-nb">608+</div>
-        <div class="stat-note">持续迭代节奏</div>
+        <div class="stat-note">没有协作者</div>
       </div>
     </div>
   </div>
   <div class="foot">
-    <div>项目名 · Product　|　example.com</div>
+    <div>项目 · CodePilot　|　github.com/codepilot</div>
     <div>Act I · Dev Numbers</div>
   </div>
 </section>
@@ -311,8 +311,8 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
     </div>
     <!-- 右列：图片用标准 16/10 比例 + max-height，不要 align-self:end -->
     <figure class="frame-img r-16x10" data-anim>
-      <img src="images/product.png" alt="Product 产品截图">
-      <figcaption class="img-cap">Product · 产品截图</figcaption>
+      <img src="images/codepilot.png" alt="CodePilot 产品截图">
+      <figcaption class="img-cap">CodePilot · 产品截图</figcaption>
     </figure>
   </div>
   <div class="foot">
@@ -518,7 +518,7 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
       And that makes all the difference.
     </p>
     <div class="meta-row" data-anim>
-      <span>— Speaker</span><span>·</span><span>YYYY.MM.DD</span>
+      <span>— Luke Wroblewski</span><span>·</span><span>2026.04.16</span>
     </div>
   </div>
   <div class="foot">
@@ -611,8 +611,8 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
       </p>
 
       <div class="callout" style="margin-top:3vh" data-anim>
-        "This phase was disciplined.<br>The system came before the surface."
-        <div class="callout-src">— Project Lead</div>
+        "This phase was pretty standard.<br>Just a solid Web design process."
+        <div class="callout-src">— Luke Wroblewski</div>
       </div>
     </div>
     <!-- 右列:辅助图 · 竖版或方形 -->
